@@ -7,6 +7,8 @@ namespace MapTileService
 {
     public class MBTilesStorage
     {
+        private const string TableTiles = "tiles";
+
         private readonly string connectionString;
 
         public MBTilesStorage(string connectionString)
@@ -14,19 +16,7 @@ namespace MapTileService
             this.connectionString = connectionString;
         }
 
-        public async Task<byte[]> GetTileAsync(int x, int y, int z)
-        {
-            return await this.ReadTileDataAsync(x, y, z).ConfigureAwait(false);
-        }
-
-        private const string TableTiles = "tiles";
-
-        private static int TileRow(int y, int zoom)
-        {
-            return ((2 << zoom) / 2 - y - 1);
-        }
-
-        private async Task<byte[]> ReadTileDataAsync(int x, int y, int z)
+        public async Task<byte[]> GetTileAsync(int tileColumn, int tileRow, int zoomLevel)
         {
             var commandText = String.Format(CultureInfo.InvariantCulture,
                 "SELECT tile_data FROM {0} WHERE ((zoom_level = @zoom_level) AND (tile_column = @tile_column) AND (tile_row = @tile_row))",
@@ -39,9 +29,9 @@ namespace MapTileService
                 {
                     command.Parameters.AddRange(new[]
                     {
-                        new SqliteParameter("@tile_column", x),
-                        new SqliteParameter("@tile_row", TileRow(y, z)),
-                        new SqliteParameter("@zoom_level", z),
+                        new SqliteParameter("@tile_column", tileColumn),
+                        new SqliteParameter("@tile_row", tileRow),
+                        new SqliteParameter("@zoom_level", zoomLevel),
                     });
 
                     await connection.OpenAsync().ConfigureAwait(false);
