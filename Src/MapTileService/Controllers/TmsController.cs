@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +12,10 @@ namespace MapTileService.Controllers
     public class TmsController : Controller
     {
         private IConfiguration configuration;
+
+        private static readonly string LocalFileScheme = "file:///";
+
+        private static readonly string MBTilesScheme = "mbtiles:///";
 
         private static readonly string ImagePng = "image/png";
 
@@ -45,30 +50,63 @@ namespace MapTileService.Controllers
             {
                 // TODO: check formatExtension == tileset.Format
 
-                var connectionString = String.Format(CultureInfo.InvariantCulture, "Data Source={0}", tileset.Source.Substring("mbtiles:///".Length));
-                var db = new MBTilesStorage(connectionString);
-                var data = await db.GetTileAsync(x, y, z);
-                if (data != null)
+                if (tileset.Source.StartsWith(MBTilesScheme, StringComparison.Ordinal))
                 {
-                    var mediaType = String.Empty;
-                    switch (tileset.Format)
+                    var connectionString = $"Data Source={tileset.Source.Substring(MBTilesScheme.Length)}";
+                    var db = new MBTilesStorage(connectionString);
+                    var data = await db.GetTileAsync(x, y, z);
+                    if (data != null)
                     {
-                        case "png": { mediaType = ImagePng; break; }
-                        case "jpg": { mediaType = ImageJpeg; break; }
-                        default: throw new ArgumentException("format");
+                        return File(data, GetContentType(tileset.Format));
                     }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                else if (tileset.Source.StartsWith(LocalFileScheme, StringComparison.Ordinal))
+                {
+                    var path = String.Format(
+                        CultureInfo.InvariantCulture,
+                        tileset.Source
+                            .Substring(LocalFileScheme.Length)
+                            .Replace("{x}", "{0}")
+                            .Replace("{y}", "{1}")
+                            .Replace("{z}", "{2}"),
+                        x,
+                        y,
+                        z);
 
-                    return File(data, mediaType);
+                    var fileInfo = new FileInfo(path);
+                    var buffer = new byte[fileInfo.Length];
+                    using (var fileStream = fileInfo.OpenRead())
+                    {
+                        await fileStream.ReadAsync(buffer, 0, buffer.Length);
+                        return File(buffer, GetContentType(tileset.Format));
+                    }
                 }
                 else
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
             }
             else
             {
-                return NotFound();
+                return NotFound($"Specified tileset '{tilesetName}' not exists on server");
             }
+        }
+
+        private static string GetContentType(string tileFormat)
+        {
+            var mediaType = String.Empty;
+            switch (tileFormat)
+            {
+                case "png": { mediaType = ImagePng; break; }
+                case "jpg": { mediaType = ImageJpeg; break; }
+                default: throw new ArgumentException("tileFormat");
+            }
+
+            return mediaType;
         }
     }
 }
