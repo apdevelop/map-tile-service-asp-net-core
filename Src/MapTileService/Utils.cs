@@ -53,11 +53,13 @@ namespace MapTileService
 
         public static string GetMBTilesConnectionString(string source)
         {
+            // TODO: fix for Unix local file paths (four slashes ?)
             return $"Data Source={source.Substring(MBTilesScheme.Length)}";
         }
 
         public static string GetLocalFilePath(string source, int x, int y, int z)
         {
+            // TODO: fix for Unix local file paths (four slashes ?)
             return String.Format(
                         CultureInfo.InvariantCulture,
                         source

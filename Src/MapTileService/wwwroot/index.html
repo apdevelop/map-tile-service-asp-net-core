@@ -50,6 +50,20 @@
                 attribution: '',
                 maxZoom: 17,
                 tms: true
+            }),
+            'world-rpi': L.tileLayer('/tms/1.0.0/world-rpi/{z}/{x}/{y}.png', {
+                attribution: '',
+                maxZoom: 5,
+                tms: true
+            }),
+            'world-fs-rpi': L.tileLayer('/tms/1.0.0/world-fs-rpi/{z}/{x}/{y}.png', {
+                attribution: '',
+                maxZoom: 5,
+                tms: true
+            }),
+            'digitalglobe-rpi (not TMS)': L.tileLayer('/api/tiles/?tileset=digitalglobe-rpi&x={x}&y={y}&z={z}', {
+                attribution: '',
+                maxZoom: 17
             })
         };
 

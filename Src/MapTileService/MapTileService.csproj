@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="2.0.0" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="1.1.9" />
   </ItemGroup>
 
   <ItemGroup>

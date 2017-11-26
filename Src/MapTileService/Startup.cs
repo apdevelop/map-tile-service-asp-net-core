@@ -12,7 +12,7 @@ namespace MapTileService
         public Startup()
         {
             var builder = new ConfigurationBuilder()
-               .AddJsonFile("appSettings.json");
+               .AddJsonFile("appsettings.json");
             Configuration = builder.Build();
         }
 
