@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -36,6 +36,10 @@
                 attribution: '',
                 maxZoom: 5,
                 tms: true
+            }),
+            'digitalglobe (not TMS)': L.tileLayer('/api/tiles/?tileset=digitalglobe&x={x}&y={y}&z={z}', {
+                attribution: '',
+                maxZoom: 17
             }),
             'world-countries': L.tileLayer('/tms/1.0.0/world-countries/{z}/{x}/{y}.png', {
                 attribution: '',
