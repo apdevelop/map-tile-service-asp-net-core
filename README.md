@@ -6,5 +6,6 @@ Developed using MS Visual Studio 2017, C#, ASP.Net Core 2.0. Using [Microsoft.Da
 
 ### References
 * [Tile Map Service](https://en.wikipedia.org/wiki/Tile_Map_Service)
+* [Tile Map Service Specification](https://wiki.osgeo.org/index.php?title=Tile_Map_Service_Specification)
 * [MBTiles tileset format](https://github.com/mapbox/mbtiles-spec)
 * [WMS in Leaflet](http://leafletjs.com/examples/wms/wms.html)

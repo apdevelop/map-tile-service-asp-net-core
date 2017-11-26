@@ -8,6 +8,9 @@
 
         public string Source { get; set; }
 
-        // TODO: TMS type Y coord (flipped/not flipped)
+        /// <summary>
+        /// TMS type Y coord (true: Y going from bottom to top; false: from top to bottom, like in OSM tiles)
+        /// </summary>
+        public bool Tms { get; set; }
     }
 }

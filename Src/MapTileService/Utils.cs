@@ -72,7 +72,11 @@ namespace MapTileService
 
         public static async Task<byte[]> ReadTileFromLocalFileAsync(TileSetConfiguration tileset, int x, int y, int z)
         {
-            // TODO: flip Y, if configured
+            if (!tileset.Tms)
+            {
+                y = Utils.FromTmsY(y, z);
+            }
+
             var path = Utils.GetLocalFilePath(tileset.Source, x, y, z);
             var fileInfo = new FileInfo(path);
             if (fileInfo.Exists)
@@ -92,7 +96,11 @@ namespace MapTileService
 
         public static async Task<byte[]> ReadTileFromMBTilesAsync(TileSetConfiguration tileset, int x, int y, int z)
         {
-            // TODO: flip Y, if configured
+            if (!tileset.Tms)
+            {
+                y = Utils.FromTmsY(y, z);
+            }
+
             var connectionString = Utils.GetMBTilesConnectionString(tileset.Source);
             var db = new MBTilesStorage(connectionString);
             var data = await db.GetTileAsync(x, y, z);
@@ -105,7 +113,7 @@ namespace MapTileService
         /// Convert Y tile coordinate of TMS standard (flip)
         /// </summary>
         /// <param name="y"></param>
-        /// <param name="zoom"></param>
+        /// <param name="zoom">Zoom level</param>
         /// <returns></returns>
         public static int FromTmsY(int tmsY, int zoom)
         {
