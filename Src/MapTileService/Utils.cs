@@ -53,23 +53,23 @@ namespace MapTileService
 
         public static string GetMBTilesConnectionString(string source)
         {
-            // TODO: fix for Unix local file paths (four slashes ?)
-            return $"Data Source={source.Substring(MBTilesScheme.Length)}";
+            var uriString = source.Replace(MBTilesScheme, LocalFileScheme, StringComparison.Ordinal);
+            var uri = new Uri(uriString);
+
+            return $"Data Source={uri.LocalPath}";
         }
 
         public static string GetLocalFilePath(string source, int x, int y, int z)
         {
-            // TODO: fix for Unix local file paths (four slashes ?)
-            return String.Format(
+            var uriString = String.Format(
                         CultureInfo.InvariantCulture,
-                        source
-                            .Substring(LocalFileScheme.Length)
-                            .Replace("{x}", "{0}")
-                            .Replace("{y}", "{1}")
-                            .Replace("{z}", "{2}"),
+                        source.Replace("{x}", "{0}").Replace("{y}", "{1}").Replace("{z}", "{2}"),
                         x,
                         y,
                         z);
+            var uri = new Uri(uriString);
+
+            return uri.LocalPath;
         }
 
         public static async Task<byte[]> ReadTileFromLocalFileAsync(TileSetConfiguration tileset, int x, int y, int z)
