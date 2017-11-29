@@ -28,12 +28,12 @@
         // TODO: get tilesets list from TMS capabilities
         var baseMaps = {
             'world': L.tileLayer('/tms/1.0.0/world/{z}/{x}/{y}.png', {
-                attribution: '',
+                attribution: 'Esri.com',
                 maxZoom: 5,
                 tms: true
             }),
             'world-fs': L.tileLayer('/tms/1.0.0/world-fs/{z}/{x}/{y}.png', {
-                attribution: '',
+                attribution: 'Esri.com',
                 maxZoom: 5,
                 tms: true
             }),
@@ -42,7 +42,7 @@
                 maxZoom: 17
             }),
             'world-countries': L.tileLayer('/tms/1.0.0/world-countries/{z}/{x}/{y}.png', {
-                attribution: '',
+                attribution: 'Esri.com',
                 maxZoom: 5,
                 tms: true
             }),
@@ -51,20 +51,62 @@
                 maxZoom: 17,
                 tms: true
             }),
-            'world-rpi': L.tileLayer('/tms/1.0.0/world-rpi/{z}/{x}/{y}.png', {
-                attribution: '',
+            'RPi.world': L.tileLayer('/tms/1.0.0/world-rpi/{z}/{x}/{y}.png', {
+                attribution: 'Esri.com',
                 maxZoom: 5,
                 tms: true
             }),
-            'world-fs-rpi': L.tileLayer('/tms/1.0.0/world-fs-rpi/{z}/{x}/{y}.png', {
-                attribution: '',
+            'RPi.world-fs': L.tileLayer('/tms/1.0.0/world-fs-rpi/{z}/{x}/{y}.png', {
+                attribution: 'Esri.com',
                 maxZoom: 5,
                 tms: true
             }),
-            'digitalglobe-rpi (not TMS)': L.tileLayer('/api/tiles/?tileset=digitalglobe-rpi&x={x}&y={y}&z={z}', {
+            'RPi.digitalglobe (not TMS)': L.tileLayer('/api/tiles/?tileset=digitalglobe-rpi&x={x}&y={y}&z={z}', {
                 attribution: '',
                 maxZoom: 17
             })
+        };
+
+        L.GridLayer.TileGrid = L.GridLayer.extend({
+            createTile: function (coords) {
+                var isTms = this.getCurrentBaseMap().options.tms;
+                var tile = document.createElement('div');
+                tile.innerHTML =
+                    '<span style="display: inline-block; line-height: 256px; vertical-align: middle; font-size: 32px; font-weight: bold; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' +
+                    '(' + coords.x.toString() + ', ' +
+                    (isTms ? (this.flipY(coords.y, coords.z)) : (coords.y)).toString() + ', ' +
+                    coords.z.toString() + ')' +
+                    '</span>';
+                tile.style.outline = '1px solid magenta';
+                tile.style.textAlign = 'center';
+
+                return tile;
+            },
+            getCurrentBaseMap: function () {
+                var result;
+                this._map.eachLayer(function (l) {
+                    if ((l instanceof L.TileLayer) && (l.options.pane === 'tilePane')) {
+                        result = l;
+                    }
+                }, this);
+
+                return result;
+            },
+            flipY: function (y, z) {
+                // Converting TMS tile coordinates to Google/Bing/OSM tile coordinates
+                return (1 << z) - y - 1;
+            }
+        });
+
+        var tileGrid = new L.GridLayer.TileGrid(
+            {
+                opacity: 1.0,
+                zIndex: 2,
+                pane: 'overlayPane'
+            });
+
+        var overlayMaps = {
+            "Tile Grid": tileGrid
         };
 
         var map = L.map('map', {
@@ -72,8 +114,8 @@
             doubleClickZoom: false,
             layers: [baseMaps['world']]
         }).setView([0, 0], 0);
-
-        L.control.layers(baseMaps).addTo(map);
+        // TODO: update Tile Grid overlay after base map change
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
     </script>
 </body>
 </html>
