@@ -19,8 +19,6 @@ namespace MapTileService.TestClient
                 count,
                 sw.Elapsed,
                 sw.Elapsed.TotalMilliseconds / ((double)count));
-
-            Console.ReadKey();
         }
 
         private static void GetRandomTiles(string tilesetName, int zoomLevel, int count)

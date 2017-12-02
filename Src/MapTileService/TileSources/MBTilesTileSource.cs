@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MapTileService.TileSources
@@ -9,10 +11,33 @@ namespace MapTileService.TileSources
 
         private readonly string contentType;
 
+        /// <summary>
+        /// [Tile coordinates; row id]
+        /// </summary>
+        private ConcurrentDictionary<long, long> tileKeys = new ConcurrentDictionary<long, long>();
+
+        private bool isTileKeysReady = false;
+
         public MBTilesTileSource(TileSetConfiguration configuration)
         {
             this.configuration = configuration;
             this.contentType = Utils.GetContentType(this.configuration.Format);
+
+            if (this.configuration.UseCoordinatesCache)
+            {
+                var filePath = GetLocalFilePath(this.configuration.Source);
+                if (File.Exists(filePath))
+                {
+                    // TODO: not the best placement in constructor
+                    Task.Run(() =>
+                    {
+                        var connectionString = GetMBTilesConnectionString(this.configuration.Source);
+                        var db = new MBTilesStorage(connectionString);
+                        db.ReadTileCoordinates(this.tileKeys).Wait();
+                        this.isTileKeysReady = true;
+                    });
+                }
+            }
         }
 
         async Task<byte[]> ITileSource.GetTileAsync(int x, int y, int z)
@@ -24,16 +49,48 @@ namespace MapTileService.TileSources
 
             var connectionString = GetMBTilesConnectionString(this.configuration.Source);
             var db = new MBTilesStorage(connectionString);
-            var data = await db.GetTileAsync(x, y, z);
-            return data;
+
+            // TODO: if database contents were changed, coordinates cache should be invalidated
+
+            if (this.configuration.UseCoordinatesCache)
+            {
+                var key = MBTilesStorage.CreateTileCoordinatesKey(z, x, y);
+                if (tileKeys.ContainsKey(key))
+                {
+                    // Get rowid from cache, read table record by rowid (very fast, compared to selecting by three columns)
+                    return await db.GetTileAsync(tileKeys[key]);
+                }
+                else
+                {
+                    if (this.isTileKeysReady)
+                    {
+                        // Assuming there is no tile in database, if it not exists in cache
+                        return null;
+                    }
+                    else
+                    {
+                        // While cache is not ready, allow simple database read
+                        return await db.GetTileAsync(x, y, z);
+                    }
+                }
+            }
+            else
+            {
+                return await db.GetTileAsync(x, y, z);
+            }
         }
 
-        private static string GetMBTilesConnectionString(string source)
+        private static string GetLocalFilePath(string source)
         {
             var uriString = source.Replace(Utils.MBTilesScheme, Utils.LocalFileScheme, StringComparison.Ordinal);
             var uri = new Uri(uriString);
 
-            return $"Data Source={uri.LocalPath}";
+            return uri.LocalPath;
+        }
+
+        private static string GetMBTilesConnectionString(string source)
+        {
+            return $"Data Source={GetLocalFilePath(source)}";
         }
 
         TileSetConfiguration ITileSource.Configuration => this.configuration;
