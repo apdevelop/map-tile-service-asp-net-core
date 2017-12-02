@@ -20,6 +20,7 @@ namespace MapTileService
             var builder = new ConfigurationBuilder()
                .AddJsonFile("appsettings.json");
             this.Configuration = builder.Build();
+            // TODO: check and log configuration errors
             Startup.TileSources = Utils.GetTileSetConfigurations(this.Configuration)
                 .ToDictionary(c => c.Name, c => TileSourceFabric.CreateTileSource(c));
         }

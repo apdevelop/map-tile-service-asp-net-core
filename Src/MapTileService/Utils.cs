@@ -25,8 +25,7 @@ namespace MapTileService
         {
             return configuration
                 .GetSection("tilesets")
-                .Get<TileSetConfiguration[]>()
-                .ToList();
+                .Get<IList<TileSetConfiguration>>();
         }
 
         public static string GetContentType(string tileFormat)
