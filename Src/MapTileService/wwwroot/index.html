@@ -37,6 +37,11 @@
                 maxZoom: 5,
                 tms: true
             }),
+            'digitalglobe (TMS)': L.tileLayer('/tms/1.0.0/digitalglobe/{z}/{x}/{y}.png', {
+                attribution: '',
+                maxZoom: 17,
+                tms: true
+            }),
             'digitalglobe (not TMS)': L.tileLayer('/api/tiles/?tileset=digitalglobe&x={x}&y={y}&z={z}', {
                 attribution: '',
                 maxZoom: 17

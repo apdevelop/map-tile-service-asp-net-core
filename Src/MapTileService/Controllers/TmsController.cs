@@ -29,37 +29,18 @@ namespace MapTileService.Controllers
         [HttpGet("{tilesetName}/{z}/{x}/{y}.{formatExtension}")]
         public async Task<IActionResult> GetTile(string tilesetName, int x, int y, int z, string formatExtension)
         {
-            var tileset = configuration.GetTileSetConfiguration(tilesetName);
-            if (tileset != null)
+            if (Startup.TileSources.ContainsKey(tilesetName))
             {
-                // TODO: check formatExtension == tileset.Format
-                if (Utils.IsMBTilesScheme(tileset.Source))
+                // TODO: check formatExtension == tileset.Configuration.Format
+                var tileSource = Startup.TileSources[tilesetName];
+                var data = await tileSource.GetTileAsync(x, y, z);
+                if (data != null)
                 {
-                    var data = await Utils.ReadTileFromMBTilesAsync(tileset, x, y, z);
-                    if (data != null)
-                    {
-                        return File(data, Utils.GetContentType(tileset.Format));
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
-                }
-                else if (Utils.IsLocalFileScheme(tileset.Source))
-                {
-                    var data = await Utils.ReadTileFromLocalFileAsync(tileset, x, y, z);
-                    if (data != null)
-                    {
-                        return File(data, Utils.GetContentType(tileset.Format));
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
+                    return File(data, tileSource.ContentType);
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             else

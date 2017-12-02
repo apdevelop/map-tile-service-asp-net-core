@@ -14,8 +14,6 @@ namespace MapTileService.Controllers
             this.configuration = configuration;
         }
 
-        // TODO: use shared code for processing tile request
-
         /// <summary>
         /// Get tile from tileset with specified coordinates 
         /// URL in Google Maps format, like http://localhost/MapTileService/?tileset=world&x=4&y=5&z=3
@@ -28,38 +26,17 @@ namespace MapTileService.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetTile(string tileset, int x, int y, int z)
         {
-            var tilesetConfiguration = configuration.GetTileSetConfiguration(tileset);
-            if (tilesetConfiguration != null)
+            if (Startup.TileSources.ContainsKey(tileset))
             {
-                y = Utils.FromTmsY(y, z);
-
-                if (Utils.IsMBTilesScheme(tilesetConfiguration.Source))
+                var tileSource = Startup.TileSources[tileset];
+                var data = await tileSource.GetTileAsync(x, Utils.FromTmsY(y, z), z);
+                if (data != null)
                 {
-                    var data = await Utils.ReadTileFromMBTilesAsync(tilesetConfiguration, x, y, z);
-                    if (data != null)
-                    {
-                        return File(data, Utils.GetContentType(tilesetConfiguration.Format));
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
-                }
-                else if (Utils.IsLocalFileScheme(tilesetConfiguration.Source))
-                {
-                    var data = await Utils.ReadTileFromLocalFileAsync(tilesetConfiguration, x, y, z);
-                    if (data != null)
-                    {
-                        return File(data, Utils.GetContentType(tilesetConfiguration.Format));
-                    }
-                    else
-                    {
-                        return NotFound();
-                    }
+                    return File(data, tileSource.ContentType);
                 }
                 else
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
             }
             else
