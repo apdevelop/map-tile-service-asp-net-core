@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MapTileService.Controllers
 {
-    [Route("tms/1.0.0")]
+    [Route("tms")]
     public class TmsController : Controller
     {
         private IConfiguration configuration;
@@ -14,7 +16,43 @@ namespace MapTileService.Controllers
             this.configuration = configuration;
         }
 
-        // TODO: return capabilities documents (XML)
+        private string BaseUrl
+        {
+            get
+            {
+                return $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+            }
+        }
+
+        [HttpGet("")]
+        public IActionResult GetCapabilitiesServices()
+        {
+            using (var ms = new MemoryStream())
+            {
+                (new CapabilitiesDocumentBuilder(this.BaseUrl)).GetServices().Save(ms);
+                return File(ms.ToArray(), Utils.TextXml);
+            }
+        }
+
+        [HttpGet("1.0.0")]
+        public IActionResult GetCapabilitiesTileMaps()
+        {
+            using (var ms = new MemoryStream())
+            {
+                (new CapabilitiesDocumentBuilder(this.BaseUrl)).GetTileMaps().Save(ms);
+                return File(ms.ToArray(), Utils.TextXml);
+            }
+        }
+
+        [HttpGet("1.0.0/{tilesetName}")]
+        public IActionResult GetCapabilitiesTileSets(string tilesetName)
+        {
+            using (var ms = new MemoryStream())
+            {
+                (new CapabilitiesDocumentBuilder(this.BaseUrl)).GetTileSets(tilesetName).Save(ms);
+                return File(ms.ToArray(), Utils.TextXml);
+            }
+        }
 
         /// <summary>
         /// Get tile from tileset with specified coordinates 
@@ -26,9 +64,14 @@ namespace MapTileService.Controllers
         /// <param name="z">Zoom level</param>
         /// <param name="formatExtension"></param>
         /// <returns></returns>
-        [HttpGet("{tilesetName}/{z}/{x}/{y}.{formatExtension}")]
+        [HttpGet("1.0.0/{tilesetName}/{z}/{x}/{y}.{formatExtension}")]
         public async Task<IActionResult> GetTile(string tilesetName, int x, int y, int z, string formatExtension)
         {
+            if (String.IsNullOrEmpty(tilesetName))
+            {
+                return BadRequest();
+            }
+
             if (Startup.TileSources.ContainsKey(tilesetName))
             {
                 // TODO: check formatExtension == tileset.Configuration.Format

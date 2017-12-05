@@ -33,7 +33,7 @@ namespace MapTileService.TileSources
                     {
                         var connectionString = GetMBTilesConnectionString(this.configuration.Source);
                         var db = new MBTilesStorage(connectionString);
-                        db.ReadTileCoordinates(this.tileKeys).Wait();
+                        db.ReadTileCoordinates(this.tileKeys).Wait(); // TODO: check presence of rowid
                         this.isTileKeysReady = true;
                     });
                 }
@@ -90,7 +90,9 @@ namespace MapTileService.TileSources
 
         private static string GetMBTilesConnectionString(string source)
         {
-            return $"Data Source={GetLocalFilePath(source)}";
+            // https://github.com/aspnet/Microsoft.Data.Sqlite/wiki/Connection-Strings
+
+            return $"Data Source={GetLocalFilePath(source)}; Mode=ReadOnly;";
         }
 
         TileSetConfiguration ITileSource.Configuration => this.configuration;

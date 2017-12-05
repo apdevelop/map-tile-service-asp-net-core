@@ -1,12 +1,13 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
 using System.Collections.Concurrent;
-using System.Globalization;
 using System.Threading.Tasks;
 
 namespace MapTileService
 {
-    public class MBTilesStorage
+    /// <summary>
+    /// Data access layer for MBTiles (SQLite) database
+    /// </summary>
+    class MBTilesStorage
     {
         private const string TableTiles = "tiles";
 
@@ -19,10 +20,7 @@ namespace MapTileService
 
         public async Task<byte[]> GetTileAsync(int tileColumn, int tileRow, int zoomLevel)
         {
-            var commandText = String.Format(CultureInfo.InvariantCulture,
-                "SELECT tile_data FROM {0} WHERE ((zoom_level = @zoom_level) AND (tile_column = @tile_column) AND (tile_row = @tile_row))",
-                TableTiles);
-
+            var commandText = $"SELECT tile_data FROM {TableTiles} WHERE ((zoom_level = @zoom_level) AND (tile_column = @tile_column) AND (tile_row = @tile_row))";
             byte[] result = null;
             using (var connection = new SqliteConnection(this.connectionString))
             {
@@ -55,10 +53,7 @@ namespace MapTileService
 
         public async Task<byte[]> GetTileAsync(long rowId)
         {
-            var commandText = String.Format(CultureInfo.InvariantCulture,
-                "SELECT tile_data FROM {0} WHERE (rowid = @rowId)",
-                TableTiles);
-
+            var commandText = $"SELECT tile_data FROM {TableTiles} WHERE (rowid = @rowId)";
             byte[] result = null;
             using (var connection = new SqliteConnection(this.connectionString))
             {
@@ -84,6 +79,7 @@ namespace MapTileService
             return result;
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static long CreateTileCoordinatesKey(long zoomLevel, long tileColumn, long tileRow)
         {
             // Z[8] | X[24] | Y[24]
@@ -93,7 +89,6 @@ namespace MapTileService
         public async Task ReadTileCoordinates(ConcurrentDictionary<long, long> tileKeys)
         {
             var commandText = $"SELECT rowid, zoom_level, tile_column, tile_row FROM {TableTiles}";
-
             using (var connection = new SqliteConnection(this.connectionString))
             {
                 using (var command = new SqliteCommand(commandText, connection))

@@ -17,9 +17,15 @@ namespace MapTileService
 
         public static readonly string ImageJpeg = "image/jpeg";
 
+        public static readonly string TextXml = "text/xml";
+
         public static readonly string LocalFileScheme = "file:///";
 
         public static readonly string MBTilesScheme = "mbtiles:///";
+
+        public static readonly string TileMapServiceVersion = "1.0.0";
+
+        public static readonly string EPSG3857 = "EPSG:3857";
 
         public static IList<TileSetConfiguration> GetTileSetConfigurations(this IConfiguration configuration)
         {

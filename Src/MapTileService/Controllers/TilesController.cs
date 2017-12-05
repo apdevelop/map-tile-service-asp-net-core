@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Threading.Tasks;
 
 namespace MapTileService.Controllers
@@ -26,6 +27,11 @@ namespace MapTileService.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetTile(string tileset, int x, int y, int z)
         {
+            if (String.IsNullOrEmpty(tileset))
+            {
+                return BadRequest();
+            }
+
             if (Startup.TileSources.ContainsKey(tileset))
             {
                 var tileSource = Startup.TileSources[tileset];
