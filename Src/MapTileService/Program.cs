@@ -12,7 +12,7 @@ namespace MapTileService
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:5000") // Allow remote calls (instead of default http://localhost:5000)
+                .UseUrls("http://localhost:5000") // Allow remote calls http://*:5000 (instead of default http://localhost:5000)
                 .UseStartup<Startup>()
                 .Build();
     }

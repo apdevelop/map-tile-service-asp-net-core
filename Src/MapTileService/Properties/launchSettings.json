@@ -16,11 +16,10 @@
     },
     "MapTileService": {
       "commandName": "Project",
-      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:50865/"
+      "applicationUrl": "http://localhost:5000/"
     }
   }
 }

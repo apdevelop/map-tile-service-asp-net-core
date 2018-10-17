@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapTileService", "MapTileService\MapTileService.csproj", "{41E5023C-8022-4E2B-8EC2-7628F7C9AFCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapTileService.TestClient", "MapTileService.TestClient\MapTileService.TestClient.csproj", "{1A25B940-C5D9-4006-AA5A-D0C98FC07411}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapTileService.TestClient", "MapTileService.TestClient\MapTileService.TestClient.csproj", "{1A25B940-C5D9-4006-AA5A-D0C98FC07411}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapTileService.MBTiles", "MapTileService.MBTiles\MapTileService.MBTiles.csproj", "{29173FB9-FC91-4C27-BBAD-AB26C425B16F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{1A25B940-C5D9-4006-AA5A-D0C98FC07411}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A25B940-C5D9-4006-AA5A-D0C98FC07411}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A25B940-C5D9-4006-AA5A-D0C98FC07411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29173FB9-FC91-4C27-BBAD-AB26C425B16F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29173FB9-FC91-4C27-BBAD-AB26C425B16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29173FB9-FC91-4C27-BBAD-AB26C425B16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29173FB9-FC91-4C27-BBAD-AB26C425B16F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
