@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace MapTileService.Controllers
 {
@@ -25,7 +26,7 @@ namespace MapTileService.Controllers
         /// <param name="z">Zoom level</param>
         /// <returns></returns>
         [HttpGet("")]
-        public async Task<IActionResult> GetTile(string tileset, int x, int y, int z)
+        public async Task<IActionResult> GetTileAsync(string tileset, int x, int y, int z)
         {
             if (String.IsNullOrEmpty(tileset))
             {

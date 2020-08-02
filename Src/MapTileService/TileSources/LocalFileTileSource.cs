@@ -7,7 +7,7 @@ namespace MapTileService.TileSources
 {
     class LocalFileTileSource : ITileSource
     {
-        private TileSetConfiguration configuration;
+        private readonly TileSetConfiguration configuration;
 
         private readonly string contentType;
 

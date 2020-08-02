@@ -6,7 +6,7 @@ namespace MapTileService
 {
     public class CapabilitiesDocumentBuilder
     {
-        private string baseUrl;
+        private readonly string baseUrl;
 
         public CapabilitiesDocumentBuilder(string baseUrl)
         {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace MapTileService
 {
@@ -10,10 +11,17 @@ namespace MapTileService
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://localhost:5000") // Allow remote calls http://*:5000 (instead of default http://localhost:5000)
-                .UseStartup<Startup>()
-                .Build();
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            // TODO: single global config
+            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+            var configuration = builder.Build();
+            var listenUrl = configuration.GetSection("listenUrl").Value;
+
+            return WebHost.CreateDefaultBuilder(args)
+                   .UseUrls(listenUrl)
+                   .UseStartup<Startup>()
+                   .Build();
+        }
     }
 }

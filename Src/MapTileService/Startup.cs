@@ -1,13 +1,12 @@
-﻿using MapTileService.TileSources;
+﻿using System.Collections.Generic;
+using System.Linq;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using MapTileService.TileSources;
 
 namespace MapTileService
 {
@@ -23,6 +22,7 @@ namespace MapTileService
                .AddJsonFile("appsettings.json");
             this.Configuration = builder.Build();
             // TODO: check and log configuration errors
+
             Startup.TileSources = Utils.GetTileSetConfigurations(this.Configuration)
                 .ToDictionary(c => c.Name, c => TileSourceFabric.CreateTileSource(c));
         }
@@ -45,29 +45,6 @@ namespace MapTileService
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseMvc();
-        }
-    }
-
-    public class ErrorLoggingMiddleware
-    {
-        private readonly RequestDelegate _next;
-
-        public ErrorLoggingMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
-
-        public async Task Invoke(HttpContext context)
-        {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine($"The following error happened: {e.Message}");
-                throw;
-            }
         }
     }
 }

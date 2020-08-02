@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace MapTileService.Controllers
 {
@@ -65,7 +66,7 @@ namespace MapTileService.Controllers
         /// <param name="formatExtension"></param>
         /// <returns></returns>
         [HttpGet("1.0.0/{tilesetName}/{z}/{x}/{y}.{formatExtension}")]
-        public async Task<IActionResult> GetTile(string tilesetName, int x, int y, int z, string formatExtension)
+        public async Task<IActionResult> GetTileAsync(string tilesetName, int x, int y, int z, string formatExtension)
         {
             if (String.IsNullOrEmpty(tilesetName))
             {

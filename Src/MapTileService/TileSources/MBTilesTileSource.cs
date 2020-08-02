@@ -33,7 +33,7 @@ namespace MapTileService.TileSources
                     {
                         var connectionString = GetMBTilesConnectionString(this.configuration.Source);
                         var db = new MBTiles.MBTilesStorage(connectionString);
-                        db.ReadTileCoordinates(this.tileKeys).Wait(); // TODO: check presence of rowid
+                        db.ReadTileCoordinatesAsync(this.tileKeys).Wait(); // TODO: check presence of rowid
                         this.isTileKeysReady = true;
                     });
                 }
@@ -58,7 +58,7 @@ namespace MapTileService.TileSources
                 if (tileKeys.ContainsKey(key))
                 {
                     // Get rowid from cache, read table record by rowid (very fast, compared to selecting by three columns)
-                    return await db.GetTileAsync(tileKeys[key]);
+                    return await db.ReadTileAsync(tileKeys[key]);
                 }
                 else
                 {
@@ -70,13 +70,13 @@ namespace MapTileService.TileSources
                     else
                     {
                         // While cache is not ready, allow simple database read
-                        return await db.GetTileAsync(x, y, z);
+                        return await db.ReadTileAsync(x, y, z);
                     }
                 }
             }
             else
             {
-                return await db.GetTileAsync(x, y, z);
+                return await db.ReadTileAsync(x, y, z);
             }
         }
 
