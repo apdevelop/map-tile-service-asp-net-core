@@ -5,7 +5,7 @@ Minimal implementation of Tile Map Service (TMS); provides access to map raster 
 ![Demo page](https://github.com/apdevelop/map-tile-service-asp-net-core/blob/master/Docs/demo-page.png)
  
 ### Technologies
-Developed using MS Visual Studio 2017, C#, ASP.Net Core 2.0.
+Developed using MS Visual Studio 2017 (with .NET Core SDK 2.1.518), C#, ASP.Net Core 2.1.
 Using
 * [Microsoft.Data.Sqlite](https://github.com/aspnet/Microsoft.Data.Sqlite) for working with SQLite database
 * [Leaflet](https://github.com/Leaflet) for map demo page
@@ -24,7 +24,7 @@ It will create the self-contained deployment (SCD) so that target system don't n
 
 Output files will be placed into
 
-`...\Src\MapTileService\bin\Release\netcoreapp2.0\linux-arm\publish\`
+`...\Src\MapTileService\bin\Release\netcoreapp2.1\linux-arm\publish\`
 
 Copy contents of this directory to RPi (for example into `/home/pi/tileservice` directory), set permissions (execute access) to startup file (note that filename is case-sensitive and has no extension)
 
