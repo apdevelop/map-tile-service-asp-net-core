@@ -4,8 +4,8 @@
     // TODO: get tilesets list from TMS capabilities response
 
     var baseMaps = {
-        'world': L.tileLayer('/tms/1.0.0/world/{z}/{x}/{y}.png', {
-            attribution: 'Esri.com',
+        'world': L.tileLayer('/tms/1.0.0/satellite-lowres/{z}/{x}/{y}.png', {
+            attribution: 'OpenMapTiles',
             maxZoom: 5,
             tms: true
         }),

@@ -57,11 +57,11 @@ namespace MapTileService.Controllers
 
         /// <summary>
         /// Get tile from tileset with specified coordinates 
-        /// URL format according to TMS 1.0.0 specs, like http://localhost/MapTileService/tms/1.0.0/world/3/4/5.png
+        /// URL format according to TMS 1.0.0 specs, like http://localhost:5000/tms/1.0.0/world/3/4/5.png
         /// </summary>
         /// <param name="tilesetName">Tileset name</param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">Tile column</param>
+        /// <param name="y">Tile row</param>
         /// <param name="z">Zoom level</param>
         /// <param name="formatExtension"></param>
         /// <returns></returns>

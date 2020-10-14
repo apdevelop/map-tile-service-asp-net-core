@@ -41,7 +41,7 @@ namespace MapTileService.MBTiles
         #endregion
 
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
         /// <param name="connectionString">Connection string for SQLite database</param>
         public MBTilesStorage(string connectionString)

@@ -26,29 +26,41 @@ namespace MapTileService.Controllers
         /// <param name="z">Zoom level</param>
         /// <returns></returns>
         [HttpGet("")]
-        public async Task<IActionResult> GetTileAsync(string tileset, int x, int y, int z)
+        public async Task<IActionResult> GetTile1Async(string tileset, int x, int y, int z)
         {
-            if (String.IsNullOrEmpty(tileset))
-            {
-                return BadRequest();
-            }
+            return await this.ReadTileAsync(tileset, x, y, z);
+        }
 
-            if (Startup.TileSources.ContainsKey(tileset))
+        [HttpGet("{tileset}/{z}/{x}/{y}")]
+        public async Task<IActionResult> GetTile2Async(string tileset, int x, int y, int z)
+        {
+            return await ReadTileAsync(tileset, x, y, z);
+        }
+
+        private async Task<IActionResult> ReadTileAsync(string tileset, int x, int y, int z)
+        {
+            if (!String.IsNullOrEmpty(tileset))
             {
-                var tileSource = Startup.TileSources[tileset];
-                var data = await tileSource.GetTileAsync(x, Utils.FromTmsY(y, z), z);
-                if (data != null)
+                if (Startup.TileSources.ContainsKey(tileset))
                 {
-                    return File(data, tileSource.ContentType);
+                    var tileSource = Startup.TileSources[tileset];
+                    var data = await tileSource.GetTileAsync(x, Utils.FromTmsY(y, z), z);
+                    if (data != null)
+                    {
+                        return File(data, tileSource.ContentType);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
                 else
                 {
-                    return NotFound();
+                    return NotFound($"Specified tileset '{tileset}' not found on server");
                 }
             }
-            else
             {
-                return NotFound($"Specified tileset '{tileset}' not exists on server");
+                return BadRequest();
             }
         }
     }
