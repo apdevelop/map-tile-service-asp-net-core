@@ -21,7 +21,7 @@ namespace MapTileService.TileSources
         public MBTilesTileSource(TileSetConfiguration configuration)
         {
             this.configuration = configuration;
-            this.contentType = Utils.GetContentType(this.configuration.Format);
+            this.contentType = Utils.GetContentType(this.configuration.Format); // TODO: from db metadata
 
             if (this.configuration.UseCoordinatesCache)
             {
@@ -32,7 +32,7 @@ namespace MapTileService.TileSources
                     Task.Run(() =>
                     {
                         var connectionString = GetMBTilesConnectionString(this.configuration.Source);
-                        var db = new MBTiles.MBTilesStorage(connectionString);
+                        var db = new MBTilesRepository(connectionString);
                         db.ReadTileCoordinatesAsync(this.tileKeys).Wait(); // TODO: check presence of rowid
                         this.isTileKeysReady = true;
                     });
@@ -48,13 +48,13 @@ namespace MapTileService.TileSources
             }
 
             var connectionString = GetMBTilesConnectionString(this.configuration.Source);
-            var db = new MBTiles.MBTilesStorage(connectionString);
+            var db = new MBTilesRepository(connectionString);
 
             // TODO: if database contents were changed, coordinates cache should be invalidated
 
             if (this.configuration.UseCoordinatesCache)
             {
-                var key = MBTiles.MBTilesStorage.CreateTileCoordinatesKey(z, x, y);
+                var key = MBTilesRepository.CreateTileCoordinatesKey(z, x, y);
                 if (tileKeys.ContainsKey(key))
                 {
                     // Get rowid from cache, read table record by rowid (very fast, compared to selecting by three columns)

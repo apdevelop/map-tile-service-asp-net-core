@@ -6,19 +6,24 @@ using System.Threading.Tasks;
 
 using Microsoft.Data.Sqlite;
 
-namespace MapTileService.MBTiles
+namespace MapTileService.TileSources
 {
     /// <summary>
     /// Data access layer for MBTiles 1.2 (SQLite) database
-    /// https://github.com/mapbox/mbtiles-spec/blob/master/1.2/spec.md
-    /// Using pure ADO.NET instead of ORM for performance reason
     /// </summary>
-    public class MBTilesStorage
+    /// <remarks>
+    /// See https://github.com/mapbox/mbtiles-spec/blob/master/1.2/spec.md
+    /// </remarks>
+    class MBTilesRepository
     {
+        // Using pure ADO.NET instead of ORM for performance reason
+
         /// <summary>
         /// MBTiles tileset magic number
-        /// https://www.sqlite.org/src/artifact?ci=trunk&filename=magic.txt
         /// </summary>
+        /// <remarks>
+        /// See https://www.sqlite.org/src/artifact?ci=trunk&filename=magic.txt
+        /// </remarks>
         private const int ApplicationId = 0x4d504258;
 
         /// <summary>
@@ -44,7 +49,7 @@ namespace MapTileService.MBTiles
         /// Constructor
         /// </summary>
         /// <param name="connectionString">Connection string for SQLite database</param>
-        public MBTilesStorage(string connectionString)
+        public MBTilesRepository(string connectionString)
         {
             this.connectionString = connectionString;
         }

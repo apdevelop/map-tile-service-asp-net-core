@@ -10,7 +10,19 @@ Using
 * [Microsoft.Data.Sqlite](https://github.com/aspnet/Microsoft.Data.Sqlite) for working with SQLite database
 * [Leaflet](https://github.com/Leaflet) for map demo page
 
-### Creating SCD for running on Linux (Raspbian OS)
+### Running framework-dependent deployment under Windows
+
+Check installed .NET Core runtimes using command:
+
+`dotnet --info`
+
+The `Microsoft.AspNetCore.App 2.1.0` (or later version) should present in list.
+
+Run the application using command:
+
+`dotnet MapTileService.dll`
+
+### Creating self-contained deployment for running on Linux (Raspbian OS)
 
 Install `libunwind8` package on target system to run .NET Core applications:
 

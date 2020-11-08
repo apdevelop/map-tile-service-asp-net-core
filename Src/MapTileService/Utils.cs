@@ -46,12 +46,12 @@ namespace MapTileService
 
         public static bool IsMBTilesScheme(string source)
         {
-            return (source.StartsWith(MBTilesScheme, StringComparison.Ordinal));
+            return source.StartsWith(MBTilesScheme, StringComparison.Ordinal);
         }
 
         public static bool IsLocalFileScheme(string source)
         {
-            return (source.StartsWith(LocalFileScheme, StringComparison.Ordinal));
+            return source.StartsWith(LocalFileScheme, StringComparison.Ordinal);
         }
 
         // https://alastaira.wordpress.com/2011/07/06/converting-tms-tile-coordinates-to-googlebingosm-tile-coordinates/

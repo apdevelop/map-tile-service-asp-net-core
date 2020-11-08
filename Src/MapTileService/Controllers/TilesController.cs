@@ -9,7 +9,7 @@ namespace MapTileService.Controllers
     [Route("api/tiles")]
     public class TilesController : Controller
     {
-        private IConfiguration configuration;
+        private readonly IConfiguration configuration;
 
         public TilesController(IConfiguration configuration)
         {

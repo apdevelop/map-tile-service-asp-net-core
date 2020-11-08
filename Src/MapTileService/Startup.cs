@@ -14,7 +14,7 @@ namespace MapTileService
     {
         public IConfiguration Configuration { get; set; }
 
-        public static Dictionary<string, ITileSource> TileSources;
+        public static Dictionary<string, ITileSource> TileSources; // TODO: DI/services
 
         public Startup()
         {
@@ -38,7 +38,6 @@ namespace MapTileService
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.DisableTelemetry = true;
             }
 
             app.UseMiddleware<ErrorLoggingMiddleware>();
