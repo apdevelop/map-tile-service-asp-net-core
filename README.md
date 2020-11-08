@@ -16,7 +16,7 @@ Check installed .NET Core runtimes using command:
 
 `dotnet --info`
 
-The `Microsoft.AspNetCore.App 2.1.0` (or later version) should present in list.
+The `Microsoft.AspNetCore.App 2.1.10` (or later version) should present in list.
 
 Run the application using command:
 
