@@ -1,4 +1,7 @@
 # Map Tile Service
+
+**This project is no more longer supported; the .NET5 implementation [Tile Map Service for .NET 5](https://github.com/apdevelop/tile-map-service-net5) is currently active.**
+
 Minimal implementation of Tile Map Service (TMS) for .NET Core 2.1; provides access to map raster (PNG/JPEG) tiles stored in standard MBTiles database and local file system.
 
 ### Demo page
